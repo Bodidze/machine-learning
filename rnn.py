@@ -1,3 +1,4 @@
+import numpy as np
 import theano
 theano.config.device = 'gpu'
 theano.config.floatX = 'float32'
@@ -25,23 +26,19 @@ model = model_from_json(open('my_model_architecture.json').read())
 model.load_weights('my_model_weights.h5')
 
 early_stopping = EarlyStopping(monitor='val_loss', patience=2)
-model.fit(X, y, validation_split=0.2, callbacks=[early_stopping])
 
 model.compile(loss='binary_crossentropy',
               optimizer='adam',
               class_mode="binary")
 
-
-
 model.fit(
     X_train, y_train,
     batch_size=batch_size,
     nb_epoch=1,
-    show_accuracy=True
+    show_accuracy=True,
+    callbacks=[early_stopping],
+    validation_split=0.2
 )
-
-
-
 
 result = model.predict_proba(X)
 
